@@ -8,8 +8,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-//HTML Routes
+//Set Routes
 
+//HTML
+app.get("/notes", function(req, res) {
+    res.sendFile(path.join(__dirname, "../Develop/public/notes.html"));
+  });
+
+  // If no matching route is found default to index
+  app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "../Develop/public/index.html"));
+  });
+
+//API
 
 //Listens
 app.listen(PORT, () =>{
