@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-const dbJson = require("./db/db.json");
+let dbJson = require("./db/db.json");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -12,21 +12,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'db')));
 const PORT = process.env.PORT || 3000;
 
-let noteData = [];
+const noteData = [];
+const dbPath = (path.join(__dirname, "./db/db.json"));
 
 // Set Routes
-
-// HTML
-//* The following HTML routes should be created:
-//  * GET `/notes` - Should return the `notes.html` file.
-
-  app.get("/notes", function(req, res) {
-    res.sendFile(path.join(__dirname, "public/notes.html"));
-  });
-//  * GET `*` - Should return the `index.html` file
-  app.get("*", function(req, res) {
-    res.sendFile(path.join(__dirname, "public/index.html"));
-  });
 
 // API
 // * The following API routes should be created:
@@ -39,9 +28,9 @@ app.get("/api/notes", function(req, res) {
 // * POST `/api/notes` - Should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
 app.post("/api/notes", function(req, res) {  
   try {
-    noteData = fs.readFileSync("db/db.json", "utf8");
+    let noteData = fs.readFileSync("db/db.json", "utf8");
     noteData = JSON.parse(noteData);
-    console.log(noteData);
+    
 
     req.body.id = noteData.length;
     noteData.push(req.body);
@@ -51,6 +40,7 @@ app.post("/api/notes", function(req, res) {
       if (err) throw err;
     });
     res.json(JSON.parse(noteData));
+    console.log(noteData);
   }
   catch (err) {
     console.log("Something's not working in API post:");
@@ -78,6 +68,18 @@ app.delete("/api/notes/:id", function(req,res){
     console.log("Something's not working in API delete:");
     console.log(err);
   }
+});
+
+// HTML
+//* The following HTML routes should be created:
+//  * GET `/notes` - Should return the `notes.html` file.
+
+app.get("/notes", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/notes.html"));
+});
+//  * GET `*` - Should return the `index.html` file
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Listens
