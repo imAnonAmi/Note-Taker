@@ -17,7 +17,7 @@ const dbPath = (path.join(__dirname, "./db/db.json"));
 
 // Set Routes
 
-// API
+// API----------------------------------------------
 // * The following API routes should be created:
 // * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res) {
@@ -53,11 +53,11 @@ app.delete("/api/notes/:id", function(req,res){
     noteData = fs.readFile("db/db.json", "utf8");
     console.log(noteData);
     noteData = JSON.parse(noteData);
-    noteData = noteData.filter(function(note) {
+    let revisedData = noteData.filter(function(note) {
       return note.id != req.params.id;
     });
 
-    noteData = JSON.stringify(noteData);
+    noteData = JSON.stringify(revisedData);
 
     fs.writeFile("db/db.json", noteData, "utf8", function(err) {
       if (err) throw err;
@@ -69,11 +69,10 @@ app.delete("/api/notes/:id", function(req,res){
     console.log(err);
   }
 });
-
+//---------------------------------------------
 // HTML
-//* The following HTML routes should be created:
-//  * GET `/notes` - Should return the `notes.html` file.
 
+//  * GET `/notes` - Should return the `notes.html` file.
 app.get("/notes", function(req, res) {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
@@ -82,7 +81,7 @@ app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
-// Listens
+// Listen!
 app.listen(PORT, () =>{
     console.log(`Server is listening on ${PORT}`)
 });
