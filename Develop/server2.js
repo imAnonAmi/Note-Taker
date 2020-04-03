@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const app = express();
-const dbJson = require("./db/db.json");
+let dbJson = require("./db/db.json");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'db')));
 const PORT = process.env.PORT || 3000;
 
 const noteData = [];
-
+const dbPath = (path.join(__dirname, "./db/db.json"));
 
 // Set Routes
 
@@ -21,15 +21,15 @@ const noteData = [];
 // * The following API routes should be created:
 // * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res) {
-  let noteData = dbJson;
-  res.json(noteData);
+  dbJson = fs.readFileSync("db/db.json", "utf8");
+  res.json(dbJson);
 });
 
 // * POST `/api/notes` - Should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
 app.post("/api/notes", function(req, res) {  
   try {
     let noteData = fs.readFileSync("db/db.json", "utf8");
-    console.log("This is logging the noteData at start:", noteData);
+    console.log(noteData);
 
     noteData = JSON.parse(noteData);
     
@@ -42,7 +42,8 @@ app.post("/api/notes", function(req, res) {
     fs.writeFileSync("db/db.json", noteData, "utf8", function(err) {
       if (err) throw err;
     });
-  
+    noteData = JSON.parse(noteData);
+    dbJson = noteData;
     res.json(noteData);
     console.log(noteData);
   }
