@@ -20,16 +20,8 @@ const jsonPath = path.join(__dirname, "./db/db.json");
 // * The following API routes should be created:
 // * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res) {
-  let noteData;
 // Read up on path and fs and finally figured out I could use 'res.sendFile' to do this live. DON'T REMOVE, this is what updates the note list on the left.
-fs.readFileSync(jsonPath, function(err, data) {
-  if (err) throw err;
-  noteData=JSON.parse(data)
-  console.log(noteData);
-res.json(noteData);
-});
-
-
+  res.sendFile(jsonPath);
 });
 
 // * POST `/api/notes` - Should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
@@ -54,7 +46,7 @@ app.post("/api/notes", function(req, res) {
     console.log("This is logging the noteData at the END of POST:   ", noteData);
   }
   catch (err) {
-    console.log("Something's not working in API POST:  ");
+    console.log("Something's not working in API post:");
     console.log(err);
   }
   
@@ -68,16 +60,20 @@ app.delete("/api/notes/:id", function(req, res) {
     let allOtherNotes =noteData.filter(function(note) {
       return note.id != req.params.id;
     })
-   
-    fs.writeFileSync("db/db.json", JSON.stringify(allOtherNotes), "utf8", function(err) {
+    noteData = allOtherNotes;
+    //noteData.push(req.body);
+
+    noteData = JSON.stringify(noteData);
+
+    fs.writeFileSync("db/db.json", noteData, "utf8", function(err) {
       if (err) throw err;
     });
   
-    res.json(allOtherNotes);
-    console.log("This is logging the noteData at the END of DELETE:   ", allOtherNotes);
+    res.json(noteData);
+    console.log("This is logging the noteData at the END of DELETE:   ", noteData);
   }
   catch (err) {
-    console.log("Something's not working in API DELETE:  ");
+    console.log("Something's not working in API DELETE:");
     console.log(err);
   }
   

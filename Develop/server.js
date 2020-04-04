@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./'));
@@ -17,18 +16,17 @@ const jsonPath = path.join(__dirname, "./db/db.json");
 // Set Routes
 
 // API----------------------------------------------
-// * The following API routes should be created:
+
 // * GET `/api/notes` - Should read the `db.json` file and return all saved notes as JSON.
 app.get("/api/notes", function(req, res) {
-// Read up on path and fs and finally figured out I could use 'res.sendFile' to do this live. DON'T REMOVE, this is what updates the note list on the left.
-  res.sendFile(jsonPath);
+
+res.sendFile(jsonPath);
 });
 
 // * POST `/api/notes` - Should receive a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
 app.post("/api/notes", function(req, res) {  
   try {
     let noteData = fs.readFileSync("db/db.json", "utf8");
-    console.log("This is logging the noteData at START of POST:   ", noteData);
 
     noteData = JSON.parse(noteData);
     
@@ -43,7 +41,6 @@ app.post("/api/notes", function(req, res) {
     });
   
     res.json(noteData);
-    console.log("This is logging the noteData at the END of POST:   ", noteData);
   }
   catch (err) {
     console.log("Something's not working in API post:");
@@ -55,13 +52,12 @@ app.post("/api/notes", function(req, res) {
 app.delete("/api/notes/:id", function(req, res) {  
   try {
     let noteData = fs.readFileSync("db/db.json", "utf8");
-    console.log("This is logging the noteData at START of DELETE:   ", noteData);
+    
     noteData = JSON.parse(noteData);
     let allOtherNotes =noteData.filter(function(note) {
       return note.id != req.params.id;
     })
     noteData = allOtherNotes;
-    noteData.push(req.body);
 
     noteData = JSON.stringify(noteData);
 
@@ -70,7 +66,6 @@ app.delete("/api/notes/:id", function(req, res) {
     });
   
     res.json(noteData);
-    console.log("This is logging the noteData at the END of DELETE:   ", noteData);
   }
   catch (err) {
     console.log("Something's not working in API DELETE:");
