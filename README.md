@@ -17,6 +17,9 @@ Simple note taking app for keeping track of the little things we all forget.
 For users that need to keep track of a lot of information, it's easy to forget or be unable to recall something important. Being able to take persistent notes allows users to have written information available when needed. This is an application that can be used to write, save, and delete notes. This application will use an express backend and save and retrieve note data from a JSON file.
 
 ## Installation
+Deployed at: https://note-taker-13.herokuapp.com/
+
+If downloaded locally:
 
 1. From your terminal, navigate to the proper folder:
 
